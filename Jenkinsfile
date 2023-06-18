@@ -35,7 +35,7 @@ pipeline {
             steps {
                 sh 'pyinstaller --onefile sources/add2vals.py'
                 input message: 'Lanjutkan ke tahap Deploy?'
-                vercel --prod
+                
                 sleep(60)
             }
             post {
