@@ -26,5 +26,22 @@ pipeline {
                 }
             }
         }
+        stage('Deploy') {
+            agent {
+                docker {
+                    image 'cdrx/pyinstaller-linux:python2'
+                }
+            }
+            steps {
+                input message: 'Finished? (Click "Proceed" to continue)'
+                sh 'pyinstaller --onefile sources/add2vals.py'
+                sleep(60)
+            }
+            post {
+                success {
+                    archiveArtifacts 'dist/add2vals'
+                }
+            }
+        }
     }
 }
