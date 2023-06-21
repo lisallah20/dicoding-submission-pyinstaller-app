@@ -32,6 +32,7 @@ pipeline {
                     environment {
                         VOLUME = '$(pwd)/sources:/src'
                         IMAGE = 'cdrx/pyinstaller-linux:python2'
+                        "overrideCommand": true
                     }
                     steps {
                         //This dir step creates a new subdirectory named by the build number.
