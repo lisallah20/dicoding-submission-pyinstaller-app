@@ -33,9 +33,9 @@ pipeline {
                 }
             }
             steps {
-                sh 'pyinstaller --onefile sources/add2vals.py'
-                input message: 'Lanjutkan ke tahap Deploy?'
                 
+                input message: 'Lanjutkan ke tahap Deploy?'
+                sh 'pyinstaller --onefile sources/add2vals.py'
                 sleep(60)
             }
             post {
