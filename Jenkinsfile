@@ -1,52 +1,30 @@
 pipeline {
-    agent none
+    agent any
     stages {
         stage('Build') {
-            agent {
-                docker {
-                    image 'python:2-alpine'
-                }
-            }
             steps {
-                sh 'python -m py_compile sources/add2vals.py sources/calc.py'
+                // Build your code here
             }
         }
         stage('Test') {
-            agent {
-                docker {
-                    image 'qnib/pytest'
-                }
-            }
             steps {
-                sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
+                // Test your code here
             }
-            post {
-                always {
-                    junit 'test-reports/results.xml'
-                }
+        }
+        stage('Manual Approval') {
+            steps {
+                input message: 'Lanjutkan ke tahap Deploy?', submitter: 'user', parameters: [
+                    [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'proceed']
+                ]
             }
         }
         stage('Deploy') {
-            agent {
-                docker {
-                    image 'cdrx/pyinstaller-linux:python2'
-                    --entrypoint=''
-                }
+            when {
+                expression { params.proceed == true }
             }
             steps {
-                input message: 'Lanjutkan ke tahap Deploy'
-                
-                sh 'pyinstaller --onefile sources/add2vals.py'
-                
-                sleep(60)
-
+                // Deploy your code here
             }
-            post {
-                success {
-                    archiveArtifacts 'dist/add2vals'
-                }
-            }
-        }
         }
     }
 }
